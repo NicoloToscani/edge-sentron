@@ -1,40 +1,55 @@
-# powerlogic-edge
+# sentron-edge
 
-Node JS application for SIMATIC WinCC Unified to read energy consumption from Schneider PowerLogic series over Modbus TCP/IP.
+Edge application for SIMATIC WinCC Unified to read energy consumption from Siemens SENTRON series over Modbus TCP/IP.
 
 ## Energy data
 
-List of **PowerLogic** meter data:
+List of **PAC2200** meter data:
 
 | Measure                            | Units                 | Type          | 
 | ---------------------------------- | --------------------- | ------------- | 
-|  I1: phase 1 current               | A                     | Float32       | 
-|  I2: phase 2 current               | A                     | Float32       |
-|  I3: phase 3 current               | A                     | Float32       |
-|  Current Avg                       | A                     | Float32       |
-|  Voltage L1-L2                     | V                     | Float32       |
-|  Voltage L2-L3                     | V                     | Float32       |
-|  Voltage L3-L1                     | V                     | Float32       |
-|  Voltage L-L Avg                   | V                     | Float32       |
-|  Voltage L1-N                      | V                     | Float32       |
-|  Voltage L2-N                      | V                     | Float32       |
-|  Voltage L3-N                      | V                     | Float32       |
-|  Voltage L-N Avg                   | V                     | Float32       |
-|  Active power phase 1              | kW                    | Float32       |
-|  Active power phase 2              | kW                    | Float32       |
-|  Active power phase 3              | kW                    | Float32       |
-|  Total active power                | kW                    | Float32       |
-|  Power factor total                | -                     | Float32       |
-|  Frequency                         | Hz                    | Float32       |
-|  Total active energy import        | Wh                    | Int64         |
+|  Voltage L1-N                      | V                     | Float         | 
+|  Voltage L2-N                      | V                     | Float         |
+|  Voltage L3-N                      | V                     | Float         |
+|  Voltage L1-L2                     | V                     | Float         |
+|  Voltage L2-L3                     | V                     | Float         |
+|  Voltage L3-L1                     | V                     | Float         |
+|  Current L1                        | A                     | Float         |
+|  Current L2                        | A                     | Float         |
+|  Current L3                        | A                     | Float         |
+|  Apparent power L1                 | VA                    | Float         |
+|  Apparent power L2                 | VA                    | Float         |
+|  Apparent power L3                 | VA                    | Float         |
+|  Active power L1                   | W                     | Float         |
+|  Active power L2                   | W                     | Float         |
+|  Active power L3                   | W                     | Float         |
+|  Reactive power L1                 | var                   | Float         |
+|  Reactive power L2                 | var                   | Float         |
+|  Reactive power L3                 | var                   | Float         |
+|  Power factor L1                   | -                     | Float         |
+|  Power factor L2                   | -                     | Float         |
+|  Power factor L3                   | -                     | Float         |
+|  Frequency                         | Hz                    | Float         |
+|  Average voltage L-N               | V                     | Float         |
+|  Average voltage L-L               | V                     | Float         |
+|  Average current                   | A                     | Float         |
+|  Total apparent power              | VA                    | Float         |
+|  Total active power                | W                     | Float         |
+|  Total reactive power              | var                   | Float         |
+|  Total power factor                | -                     | Float         |
+|  Neutral current                   | A                     | Float         |
+|  Active energy import              | Wh                    | Float         |
+|  Reactive energy import            | varh                  | Float         |
+|  Active energy export              | Wh                    | Float         |
+|  Reactive energy export            | varh                  | Float         |
 
 ## Install the App
 
-*powerlogic-edge* comes with pre-builded ```powerlogic-edge_x.x.x.app``` package that can be installed specifically on Unified Comfort Panels that runs SIMATIC Edge Runtime.
+*sentron-edge* comes with pre-builded ```sentron-edge_x.x.x.app``` package that can be installed specifically on Unified Comfort Panels that runs SIMATIC Edge Runtime.
 
 ### Download the App
 
-The **powerlogic-edge** app can be downloaded in .app format from this repository [powerlogic-edge_x.x.x.app](https://drive.google.com/drive/folders/150FJPrJYlrYPZrD2MwN5WK9AnhwfODJG)
+The **sentron-edge** app can be downloaded in .app format from this repository [sentron-edge_x.x.x.app](https://drive.google.com/drive/folders/150FJPrJYlrYPZrD2MwN5WK9AnhwfODJG)
 
 ### Prerequisites
 
@@ -43,7 +58,7 @@ The **powerlogic-edge** app can be downloaded in .app format from this repositor
 
 ### Load App on Unified Comfort Panels
 
-1. Copy the downloaded ```powerlogic-edge_x.x.x.app``` file to your Developer PC.
+1. Copy the downloaded ```sentron-edge_x.x.x.app``` file to your Developer PC.
 2. Open the Industrial Edge Management Web Page of UCP on ```https://<ucp-address>```
 3. Import the .app file using the *Import Offline* button
 4. Wait until App is installed
@@ -54,16 +69,16 @@ In order for the application to work, it is necessary to insert some elements in
 
 - **"EdgePowerLogicTags"** Table Variables;
 
-These elements are included in a TIA Portal V17 library **"EdgePowerLogicLibrary"** provided along with the powerlogic-edge application and an application example.
+These elements are included in a TIA Portal V17 library **"EdgeSentronLibrary"** provided along with the powerlogic-edge application and an application example.
 
-### "EdgePowerLogicLibrary" Library Import
+### "SentronLogicLibrary" Library Import
 
 From the TIA Portal V17 engineering software, open the **"Library"** side menu.
-Use the **"Open Global Libraries"** button and import the ```EdgePowerLogicLibrary.zal17``` file.
+Use the **"Open Global Libraries"** button and import the ```SentronLibrary.zal17``` file.
 
-### Table "EdgePowerLogicTags" variables
+### Table "SentronTags" variables
 
-Import the **"EdgePowerLogicTags"** Tags table within the HMI Tags of your TIA Portal V17 project.
+Import the **"SentronTags"** Tags table within the HMI Tags of your TIA Portal V17 project.
 
 Below are the details of the HMI Tags of the **"EdgeReportTags"** variable table:
 | HMI Tag Name                       | Type                  | Description                        | 
@@ -94,8 +109,8 @@ Below are the details of the HMI Tags of the **"EdgeReportTags"** variable table
 
 ## How to use
 In order for the application to work, the following steps must be followed:
-- Start **powerlogic-edge** from *Edge Management* 
-- Set *PowerLogic* communication parameters
+- Start **sentron-edge** from *Edge Management* 
+- Set *Sentron* communication parameters
 - Enable application with *Enable* switch
 - Connect variables for energy measures visualization
 
