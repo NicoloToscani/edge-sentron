@@ -8,12 +8,82 @@ import numpy as np
 
 # Set WinCC Unified values
 def setValues(values):
-    # HMI variables
-    voltage-L1N = values[0]
 
-  
+    # Voltage L-N (V)
+    L1_N = values[0]
+    L2_N = values[1]
+    L3_N = values[2]
 
-# Polling time (s)
+    # Voltage L-L (V)
+    L1_L2 = values[3]
+    L2_L3 = values[4]
+    L3_L1 = values[5]
+
+    # Current (I)
+    I1 = values[6]
+    I2 = values[7]
+    I3 = values[8]
+
+    # Apparent power (VA)
+    S_L1 = values[0]
+    S_L2 = values[0]
+    S_L3 = values[0]
+
+    # Active power (W)
+    P_L1 = values[0]
+    P_L2 = values[0]
+    P_L3 = values[0]
+
+    # Reactive power (var)
+    Q_L1 = values[0]
+    Q_L2 = values[0]
+    Q_L3 = values[0]
+
+    # Power Factor
+    PF_L1 = values[0]
+    PF_L2 = values[0]
+    PF_L3 = values[0]
+
+    # Frequency
+    Frequency = values[0]
+
+    # L_N avg (V)
+    L_N_Avg = values[0]
+
+    # L_L avg (V)
+    L_L_Avg = values[0]
+
+    # I avg (I)
+    I_Avg = values[0]
+
+    # Total apparent power (VA)
+    S_Total = values[0]
+
+    # Total active power (W)
+    P_Total = values[0]
+
+    # Total apparent power (var)
+    Q_Total = values[0]
+
+    # Total power factor
+    PF_Total = values[0]
+
+    # Total active energy imported - current period (Wh)
+    P_Total_Imp = values[0]
+
+    # Total reactive energy imported - current period (varh)
+    Q_Total_Imp = values[0]
+
+    # Total active energy exported - current period (Wh)
+    P_Total_Exp = values[0]
+
+    # Total reactive energy exported - current period (varh)
+    Q_Total_Exp = values[0]
+
+   
+
+
+# polling time (s)
 polling_time = 5
 
 # Connection state init
@@ -181,3 +251,9 @@ while True:
            error_code_desc = ""
 
         time.sleep(polling_time)
+
+
+
+
+
+
