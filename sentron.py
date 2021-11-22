@@ -216,7 +216,7 @@ polling_time = 5
 connection_state = 0
 
 # Modbus TCP parameters
-plc_address = "192.168.100.3"
+plc_address = "127.0.0.1"
 modbus_port = "502"
 unit_id = 1
 
@@ -270,17 +270,15 @@ while True:
     
       try:   
               # Read 100 registers - 16 int
-              register_1 = 3020 # start address first block
+              register_1 = 0 # start address first block
               request_1 = client.read_holding_registers(register_1, 100, unit = 1)
-              # print(request_1.registers)
 
               # Read 100 registers - 16 int
-              register_2 = 3020 # start address third block
+              register_2 = 548 # start address third block
               request_2 = client.read_holding_registers(register_2, 100, unit = 1)
-              # print(request_2.registers)
 
               
-              # decode_16_bit
+              # decode_32_bit
               index_register = 0
               index_register_modbus = 0
               
@@ -293,13 +291,14 @@ while True:
                   temp_registers.append(temp_register_value_1)
                   temp_registers.append(temp_register_value_2)
                   
-                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Big)
-                  values[index_register] = decoder.decode_16bit_int()
+                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
+                  values[index_register] = decoder.decode_32bit_float()
                   
                   index_register_modbus += 2
 
-              # decode_16_bit
-              index_register = 50
+              
+              # decode_32_bit
+              index_register = 0
               index_register_modbus = 0
 
               # Compose index register query n.2
@@ -311,10 +310,13 @@ while True:
                   temp_registers.append(temp_register_value_1)
                   temp_registers.append(temp_register_value_2)
                   
-                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Big)
-                  values[index_register] = decoder.decode_16bit_int()
+                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
+                  values[index_register + 50] = decoder.decode_32bit_float()
                   
                   index_register_modbus += 2
+              
+            
+             
               
       except  Exception as e:
               values = np.zeros(100)
@@ -322,15 +324,13 @@ while True:
               error_code_desc = e.args[0]
               connection_state = 0
               
-              
-        
+      
       # Write on WinCC 
       setValues(values)
-      # print(values)
-      
+            
       # Send data to WinCC
-      runtime.SendExpertCommand(writeTagCommand)
-
+      runtime.SendExpertCommand(writeTagCommand)     
+      
       # End time
       endtime = time.time()
       print("Execution time: %s seconds " % (endtime - startime))
