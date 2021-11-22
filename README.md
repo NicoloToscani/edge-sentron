@@ -67,18 +67,18 @@ The **sentron-edge** app can be downloaded in .app format from this repository [
 
 In order for the application to work, it is necessary to insert some elements inside your WinCC Unified project, including :
 
-- **"EdgePowerLogicTags"** Table Variables;
+- **"EdgeSentronTags"** Table Variables;
 
 These elements are included in a TIA Portal V17 library **"EdgeSentronLibrary"** provided along with the powerlogic-edge application and an application example.
 
-### "SentronLogicLibrary" Library Import
+### "EdgeSentronLibrary" Library Import
 
 From the TIA Portal V17 engineering software, open the **"Library"** side menu.
-Use the **"Open Global Libraries"** button and import the ```SentronLibrary.zal17``` file.
+Use the **"Open Global Libraries"** button and import the ```EdgeSentronLibrary.zal17``` file.
 
-### Table "SentronTags" variables
+### Table "EdgeSentronTags" variables
 
-Import the **"SentronTags"** Tags table within the HMI Tags of your TIA Portal V17 project.
+Import the **"EdgeSentronTags"** Tags table within the HMI Tags of your TIA Portal V17 project.
 
 Below are the details of the HMI Tags of the **"EdgeReportTags"** variable table:
 | HMI Tag Name                       | Type                  | Description                        | 
