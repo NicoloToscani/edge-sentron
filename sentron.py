@@ -131,7 +131,6 @@ def setValues(values):
     L1_N = values[0]
     L2_N = values[1]
     L3_N = values[2]
-    print(L1_N)
 
     # Voltage L-L (V)
     L1_L2 = values[3]
@@ -204,7 +203,7 @@ def setValues(values):
     
     # Prepare query for WinCC
     writeTagCommand = '{"Message":"WriteTag","Params":{"Tags":[{"Name":"L1_N","Value":"' + str(L1_N) + '"},{"Name":"L2_N","Value":"' + str(L2_N) + '"},{"Name":"L3_N","Value":"' + str(L3_N) + '"}, {"Name":"L1_L2","Value":"' + str(L1_L2) + '"},{"Name":"L2_L3","Value":"' + str(L2_L3) + '"},{"Name":"L3_L1","Value":"' + str(L3_L1) + '"},{"Name":"I1","Value":"' + str(I1) + '"},{"Name":"I2","Value":"' + str(I2) + '"},{"Name":"I3","Value":"' + str(I3) + '"},{"Name":"S_L1","Value":"' + str(S_L1) + '"},{"Name":"S_L2","Value":"' + str(S_L2) + '"},{"Name":"S_L3","Value":"' + str(S_L3) + '"},{"Name":"P_L1","Value":"' + str(P_L1) + '"},{"Name":"P_L2","Value":"' + str(P_L2) + '"},{"Name":"P_L3","Value":"' + str(P_L3) + '"},{"Name":"Q_L1","Value":"' + str(Q_L1) + '"},{"Name":"Q_L2","Value":"' + str(Q_L2) + '"},{"Name":"Q_L3","Value":"' + str(Q_L3) + '"},{"Name":"Frequency","Value":"' + str(Frequency) + '"},{"Name":"L_N_Avg","Value":"' + str(L_N_Avg) + '"},{"Name":"L_L_Avg","Value":"' + str(L_L_Avg) + '"},{"Name":"I_Avg","Value":"' + str(I_Avg) + '"},{"Name":"S_Total","Value":"' + str(S_Total) + '"},{"Name":"P_Total","Value":"' + str(P_Total) + '"},{"Name":"Q_Total","Value":"' + str(Q_Total) + '"},{"Name":"PF_Total","Value":"' + str(PF_Total) + '"},{"Name":"I_N","Value":"' + str(I_N) + '"},{"Name":"P_Total_Imp","Value":"' + str(P_Total_Imp) + '"},{"Name":"Q_Total_Imp","Value":"' + str(Q_Total_Imp) + '"},{"Name":"P_Total_Exp","Value":"' + str(P_Total_Exp) + '"},{"Name":"Q_Total_Exp","Value":"' + str(Q_Total_Exp) + '"}]},"ClientCookie":"CookieReadTags123"}\n'
-    
+    print(writeTagCommand)
     
 
 # Init variables
@@ -218,8 +217,10 @@ connection_state = 0
 
 # Modbus TCP parameters
 plc_address = "192.168.100.3"
-modbus_port = 502
+modbus_port = "502"
 unit_id = 1
+
+unit = unit_id
 
 # Modbus TCP/IP enable
 modbus_enable = 0
@@ -234,7 +235,7 @@ client = ModbusClient(plc_address, modbus_port)
 error_code = 0
 error_code_desc = ""
 
-# writeCommand
+# Write command WinCC
 writeTagCommand = ""
 
 
@@ -242,10 +243,10 @@ writeTagCommand = ""
 try:
     connection_state = client.connect()
     connection_state = 1
-    print("PLC connection: ONLINE")
-except:
+    
+except  Exception as e:
     connection_state = 0
-    print("PLC connection: OFFLINE")
+    
 
 
 #Read register - Set interval from HMI
@@ -267,14 +268,17 @@ while True:
    # If connection is open run modbus reading registers
    if(connection_state == 1):
     
-      try: 
+      try:   
               # Read 100 registers - 16 int
-              register_1 = 1 # start address first block
-              request_1 = client.read_holding_registers(register_1, 100, unit_id = 1)
+              register_1 = 3020 # start address first block
+              request_1 = client.read_holding_registers(register_1, 100, unit = 1)
+              # print(request_1.registers)
 
               # Read 100 registers - 16 int
-              register_2 = 549 # start address third block
-              request_2 = client.read_holding_registers(register_2, 100, unit_id = 1)
+              register_2 = 3020 # start address third block
+              request_2 = client.read_holding_registers(register_2, 100, unit = 1)
+              # print(request_2.registers)
+
               
               # decode_16_bit
               index_register = 0
@@ -284,7 +288,7 @@ while True:
               for index_register in range (50):
               
                   temp_register_value_1 = request_1.registers[index_register_modbus]
-                  temp_register_value_2 = request.registers[index_register_modbus + 1]
+                  temp_register_value_2 = request_1.registers[index_register_modbus + 1]
                   temp_registers = []
                   temp_registers.append(temp_register_value_1)
                   temp_registers.append(temp_register_value_2)
@@ -302,7 +306,7 @@ while True:
               for index_register in range (50):
               
                   temp_register_value_1 = request_2.registers[index_register_modbus]
-                  temp_register_value_2 = request.registers[index_register_modbus + 1]
+                  temp_register_value_2 = request_2.registers[index_register_modbus + 1]
                   temp_registers = []
                   temp_registers.append(temp_register_value_1)
                   temp_registers.append(temp_register_value_2)
@@ -311,9 +315,6 @@ while True:
                   values[index_register] = decoder.decode_16bit_int()
                   
                   index_register_modbus += 2
-              
-              # Send data to WinCC
-              runtime.SendExpertCommand(writeTagCommand) 
               
       except  Exception as e:
               values = np.zeros(100)
@@ -324,9 +325,8 @@ while True:
               
         
       # Write on WinCC 
-      print(values)
       setValues(values)
-      
+      # print(values)
       
       # Send data to WinCC
       runtime.SendExpertCommand(writeTagCommand)
