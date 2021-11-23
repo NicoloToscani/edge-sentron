@@ -42,6 +42,23 @@ def callbackFunction(response):
         msg = j.get("Message") 
         if msg == "NotifyWriteTag":
             printOnSuccess(j)
+        elif msg == "NotifyReadTag":
+            printOnSuccess(j)
+            # Get tags value
+            params = j.get("Params")
+            tags = params.get("Tags")
+            enable = tags[0].get("Value")
+            print(enable)
+            global modbus_enable
+            if(enable == "TRUE"):   
+                modbus_enable = "TRUE"
+                # Get connection parameters tags
+                global plc_address, modbus_port , unit_id
+                plc_address = tags[1].get("Value")
+                modbus_port = tags[2].get("Value")
+                unit_id = int(tags[3].get("Value"))
+            if(enable == 'FALSE'):
+                modbus_enable = "FALSE"
         elif msg == "ErrorWriteTag":
             printOnError(j)
     except json.decoder.JSONDecodeError:
@@ -49,6 +66,19 @@ def callbackFunction(response):
 
 # Init measures
 def init():
+
+    global plc_address 
+    global modbus_port
+    global unit_id
+    global modbus_enable
+
+    plc_address = "127.0.0.1"
+    modbus_port = "502"
+    unit_id = 1
+    modbus_enable = "FALSE"
+
+    ConnectionState = 0
+    ErrorState = 0
 
     # Voltage L-N (V)
     L1_N = 0
@@ -127,6 +157,16 @@ def init():
 # Set WinCC Unified values
 def setValues(values):
 
+    # Connection state 
+    # 0: disconnect 
+    # 1: connect
+    ConnectionState = connection_state
+    
+    # Error state 
+    # 0: no error 
+    # 1: error
+    ErrorState = error_state
+
     # Voltage L-N (V)
     L1_N = values[0]
     L2_N = values[1]
@@ -202,28 +242,31 @@ def setValues(values):
     Q_Total_Exp = values[53]
     
     # Prepare query for WinCC
-    writeTagCommand = '{"Message":"WriteTag","Params":{"Tags":[{"Name":"L1_N","Value":"' + str(L1_N) + '"},{"Name":"L2_N","Value":"' + str(L2_N) + '"},{"Name":"L3_N","Value":"' + str(L3_N) + '"}, {"Name":"L1_L2","Value":"' + str(L1_L2) + '"},{"Name":"L2_L3","Value":"' + str(L2_L3) + '"},{"Name":"L3_L1","Value":"' + str(L3_L1) + '"},{"Name":"I1","Value":"' + str(I1) + '"},{"Name":"I2","Value":"' + str(I2) + '"},{"Name":"I3","Value":"' + str(I3) + '"},{"Name":"S_L1","Value":"' + str(S_L1) + '"},{"Name":"S_L2","Value":"' + str(S_L2) + '"},{"Name":"S_L3","Value":"' + str(S_L3) + '"},{"Name":"P_L1","Value":"' + str(P_L1) + '"},{"Name":"P_L2","Value":"' + str(P_L2) + '"},{"Name":"P_L3","Value":"' + str(P_L3) + '"},{"Name":"Q_L1","Value":"' + str(Q_L1) + '"},{"Name":"Q_L2","Value":"' + str(Q_L2) + '"},{"Name":"Q_L3","Value":"' + str(Q_L3) + '"},{"Name":"Frequency","Value":"' + str(Frequency) + '"},{"Name":"L_N_Avg","Value":"' + str(L_N_Avg) + '"},{"Name":"L_L_Avg","Value":"' + str(L_L_Avg) + '"},{"Name":"I_Avg","Value":"' + str(I_Avg) + '"},{"Name":"S_Total","Value":"' + str(S_Total) + '"},{"Name":"P_Total","Value":"' + str(P_Total) + '"},{"Name":"Q_Total","Value":"' + str(Q_Total) + '"},{"Name":"PF_Total","Value":"' + str(PF_Total) + '"},{"Name":"I_N","Value":"' + str(I_N) + '"},{"Name":"P_Total_Imp","Value":"' + str(P_Total_Imp) + '"},{"Name":"Q_Total_Imp","Value":"' + str(Q_Total_Imp) + '"},{"Name":"P_Total_Exp","Value":"' + str(P_Total_Exp) + '"},{"Name":"Q_Total_Exp","Value":"' + str(Q_Total_Exp) + '"}]},"ClientCookie":"CookieReadTags123"}\n'
+    writeTagCommand = '{"Message":"WriteTag","Params":{"Tags":[{"Name":"ConnectionState","Value":"' + str(ConnectionState) + '"},{"Name":"ErrorState","Value":"' + str(ErrorState) + '"},{"Name":"L1_N","Value":"' + str(L1_N) + '"},{"Name":"L2_N","Value":"' + str(L2_N) + '"},{"Name":"L3_N","Value":"' + str(L3_N) + '"}, {"Name":"L1_L2","Value":"' + str(L1_L2) + '"},{"Name":"L2_L3","Value":"' + str(L2_L3) + '"},{"Name":"L3_L1","Value":"' + str(L3_L1) + '"},{"Name":"I1","Value":"' + str(I1) + '"},{"Name":"I2","Value":"' + str(I2) + '"},{"Name":"I3","Value":"' + str(I3) + '"},{"Name":"S_L1","Value":"' + str(S_L1) + '"},{"Name":"S_L2","Value":"' + str(S_L2) + '"},{"Name":"S_L3","Value":"' + str(S_L3) + '"},{"Name":"P_L1","Value":"' + str(P_L1) + '"},{"Name":"P_L2","Value":"' + str(P_L2) + '"},{"Name":"P_L3","Value":"' + str(P_L3) + '"},{"Name":"Q_L1","Value":"' + str(Q_L1) + '"},{"Name":"Q_L2","Value":"' + str(Q_L2) + '"},{"Name":"Q_L3","Value":"' + str(Q_L3) + '"},{"Name":"Frequency","Value":"' + str(Frequency) + '"},{"Name":"L_N_Avg","Value":"' + str(L_N_Avg) + '"},{"Name":"L_L_Avg","Value":"' + str(L_L_Avg) + '"},{"Name":"I_Avg","Value":"' + str(I_Avg) + '"},{"Name":"S_Total","Value":"' + str(S_Total) + '"},{"Name":"P_Total","Value":"' + str(P_Total) + '"},{"Name":"Q_Total","Value":"' + str(Q_Total) + '"},{"Name":"PF_Total","Value":"' + str(PF_Total) + '"},{"Name":"I_N","Value":"' + str(I_N) + '"},{"Name":"P_Total_Imp","Value":"' + str(P_Total_Imp) + '"},{"Name":"Q_Total_Imp","Value":"' + str(Q_Total_Imp) + '"},{"Name":"P_Total_Exp","Value":"' + str(P_Total_Exp) + '"},{"Name":"Q_Total_Exp","Value":"' + str(Q_Total_Exp) + '"}]},"ClientCookie":"CookieReadTags123"}\n'
     print(writeTagCommand)
     
-
 # Init variables
 init()
 
-# polling time (s)
+
+# Polling time (s)
 polling_time = 5
+
+# Sentron enable
+sentron_enable = 0
 
 # Connection state init
 connection_state = 0
 
 # Modbus TCP parameters
-plc_address = "127.0.0.1"
-modbus_port = "502"
-unit_id = 1
-
-unit = unit_id
+plc_address
+modbus_port
+unit_id
 
 # Modbus TCP/IP enable
-modbus_enable = 0
+modbus_enable
+
+
         
 # Values array - Device registers - Create device class 
 values = np.zeros(100)
@@ -231,14 +274,15 @@ values = np.zeros(100)
 # Modbus client
 client = ModbusClient(plc_address, modbus_port)
 
-# Error code 
-error_code = 0
-error_code_desc = ""
+# Error 
+error_state = 0          # error state 
+error_code = 0           # error code number
+error_code_desc = ""     # error code description
 
 # Write command WinCC
 writeTagCommand = ""
 
-
+'''
 # Try first socket connection
 try:
     connection_state = client.connect()
@@ -246,128 +290,150 @@ try:
     
 except  Exception as e:
     connection_state = 0
-    
+'''    
 
 
 #Read register - Set interval from HMI
 while True:
+
    
-   # Start reading time
-   startime = time.time()
+      # Start reading time
+      startime = time.time()
 
-   print("------------------------------------")
-   timestamp = datetime.now()   
-   print("Timestamp: ", timestamp)
-   if(connection_state == 1):
-        print("Connection state: ONLINE")
-   elif(connection_state == 0):
-        print("Connection state: OFFLINE")
+      print("------------------------------------")
+      timestamp = datetime.now()   
+      print("Timestamp: ", timestamp)
+      if(connection_state == 1):
+           print("Connection state: ONLINE")
+      elif(connection_state == 0):
+           print("Connection state: OFFLINE")
         
-   runtime = Runtime.Runtime(callbackFunction)
+      runtime = Runtime.Runtime(callbackFunction)
+   
+      # Read tag from WinCC
+      readTagCommand = '{"Message":"ReadTag","Params":{"Tags":["Enable","Ip_Address","Port_Number","Unit_Id"]},"ClientCookie":"myRequest1"}\n'
+      runtime.SendExpertCommand(readTagCommand)
 
-   # If connection is open run modbus reading registers
-   if(connection_state == 1):
+      print(modbus_enable)
+      print(plc_address)
+      print(modbus_port)
+      print(unit_id)
+
+      if(modbus_enable == "TRUE"):
+         print("Polling enabled")
+         # If connection is open run modbus reading registers
+         if(connection_state == 1):
     
-      try:   
-              # Read 100 registers - 16 int
-              register_1 = 0 # start address first block
-              request_1 = client.read_holding_registers(register_1, 100, unit = 1)
+               try:   
+                       # Read 100 registers - 16 int
+                       register_1 = 0 # start address first block
+                       request_1 = client.read_holding_registers(register_1, 100, unit = unit_id)
 
-              # Read 100 registers - 16 int
-              register_2 = 548 # start address third block
-              request_2 = client.read_holding_registers(register_2, 100, unit = 1)
+                       # Read 100 registers - 16 int
+                       register_2 = 548 # start address third block
+                       request_2 = client.read_holding_registers(register_2, 100, unit = unit_id)
+
+                       # decode_32_bit
+                       index_register = 0
+                       index_register_modbus = 0
+              
+                       # Compose index register query n.1
+                       for index_register in range (50):
+              
+                           temp_register_value_1 = request_1.registers[index_register_modbus]
+                           temp_register_value_2 = request_1.registers[index_register_modbus + 1]
+                           temp_registers = []
+                           temp_registers.append(temp_register_value_1)
+                           temp_registers.append(temp_register_value_2)
+                  
+                           decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
+                           values[index_register] = decoder.decode_32bit_float()
+                  
+                           index_register_modbus += 2
 
               
-              # decode_32_bit
-              index_register = 0
-              index_register_modbus = 0
-              
-              # Compose index register query n.1
-              for index_register in range (50):
-              
-                  temp_register_value_1 = request_1.registers[index_register_modbus]
-                  temp_register_value_2 = request_1.registers[index_register_modbus + 1]
-                  temp_registers = []
-                  temp_registers.append(temp_register_value_1)
-                  temp_registers.append(temp_register_value_2)
-                  
-                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
-                  values[index_register] = decoder.decode_32bit_float()
-                  
-                  index_register_modbus += 2
+                       # decode_32_bit
+                       index_register = 0
+                       index_register_modbus = 0
 
+                       # Compose index register query n.2
+                       for index_register in range (50):
               
-              # decode_32_bit
-              index_register = 0
-              index_register_modbus = 0
+                           temp_register_value_1 = request_2.registers[index_register_modbus]
+                           temp_register_value_2 = request_2.registers[index_register_modbus + 1]
+                           temp_registers = []
+                           temp_registers.append(temp_register_value_1)
+                           temp_registers.append(temp_register_value_2)
+                  
+                           decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
+                           values[index_register + 50] = decoder.decode_32bit_float()
+                  
+                           index_register_modbus += 2
 
-              # Compose index register query n.2
-              for index_register in range (50):
-              
-                  temp_register_value_1 = request_2.registers[index_register_modbus]
-                  temp_register_value_2 = request_2.registers[index_register_modbus + 1]
-                  temp_registers = []
-                  temp_registers.append(temp_register_value_1)
-                  temp_registers.append(temp_register_value_2)
-                  
-                  decoder = BinaryPayloadDecoder.fromRegisters(temp_registers, Endian.Big, wordorder=Endian.Little)
-                  values[index_register + 50] = decoder.decode_32bit_float()
-                  
-                  index_register_modbus += 2
-              
-            
-             
-              
-      except  Exception as e:
-              values = np.zeros(100)
-              error_code = 1
-              error_code_desc = e.args[0]
-              connection_state = 0
+               except  Exception as e:
+                       values = np.zeros(100)
+                       error_state = 1
+                       error_code = 1
+                       error_code_desc = e.args[0]
+                       connection_state = 0
               
       
-      # Write on WinCC 
-      setValues(values)
+               # Write on WinCC 
+               setValues(values)
             
-      # Send data to WinCC
-      runtime.SendExpertCommand(writeTagCommand)     
+               # Send data to WinCC
+               runtime.SendExpertCommand(writeTagCommand)     
       
-      # End time
-      endtime = time.time()
-      print("Execution time: %s seconds " % (endtime - startime))
-      print("Error code: ", error_code, " description: ", error_code_desc)
-      time.sleep(polling_time)
+               # End time
+               endtime = time.time()
+               print("Execution time: %s seconds " % (endtime - startime))
+               print("Error code: ", error_code, " description: ", error_code_desc)
+               time.sleep(polling_time)
      
      
-   # Else if connection is close store zeros in to dabatabase
-   elif(connection_state == 0):
+            # Else if connection is close store zeros in to dabatabase
+         elif(connection_state == 0):
       
-        values = np.zeros(100)
+                 values = np.zeros(100)
 
-        # Write zeros on WinCC 
-        setValues(values)
+                 # Write zeros on WinCC 
+                 setValues(values)
         
-        # Send data to WinCC
-        runtime.SendExpertCommand(writeTagCommand)
+                 # Send data to WinCC
+                 runtime.SendExpertCommand(writeTagCommand)
 
-        # End time
-        endtime = time.time()
-        print("Execution time: %s seconds " % (endtime - startime))
-        #  print("Error: ", error_code)
-        print("Error code: ", error_code, " description: ", error_code_desc)
-        connection_state = client.connect()
+                 # End time
+                 endtime = time.time()
+                 print("Execution time: %s seconds " % (endtime - startime))
+                 #  print("Error: ", error_code)
+                 print("Error code: ", error_code, " description: ", error_code_desc)
+                 # Modbus client
+                 client = ModbusClient(plc_address, modbus_port)
+                 connection_state = client.connect()
      
-        if(connection_state == True):
-           connection_state = 1
-           # print("Re-Connection: ", connection_state)
-           error_code = 0
-           error_code_desc = ""
-        elif(connection_state == False):
-           connection_state = 0
-           # print("Re-Connection: ", connection_state)
-           error_code = 0
-           error_code_desc = ""
+                 if(connection_state == True):
+                    connection_state = 1
+                    error_state = 0
+                    error_code = 0
+                    error_code_desc = ""
+                 elif(connection_state == False):
+                    connection_state = 0
+                    error_state = 0
+                    error_code = 0
+                    error_code_desc = ""
 
-        time.sleep(polling_time)
+                 time.sleep(polling_time)
+      
+      elif(modbus_enable == "FALSE"):
+             print("Polling disabled")
+             connection_state = 0
+             error_state = 0
+             values = np.zeros(100)
+             # End time
+             endtime = time.time()
+             print("Execution time: %s seconds " % (endtime - startime))
+             print("Error code: ", error_code, " description: ", error_code_desc)
+             time.sleep(polling_time)
 
 
 
