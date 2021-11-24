@@ -22,7 +22,7 @@ class ODK_pipe(io.IOBase):
         self.inbuffersize = inbuffersize
         # Create pipe
         self.file_name = "/tmp/HmiRuntime"
-        self.mode = 0o600
+        self.mode = 0o600 # TODO check permisisions for read/write 
         self.pipe = 0 
        
         
