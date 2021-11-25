@@ -1,7 +1,5 @@
 import io
 import os
-# import msvcrt as ms # for fd magic
-# import win32api, win32file, win32pipe
 import struct
 import traceback
 import errno
@@ -68,7 +66,7 @@ class ODK_pipe(io.IOBase):
 
     def isDataInPipe(self):
         try:
-            # Cehck if buffer is not empty
+            # Check if buffer is not empty
             data_buffer = os.path.getsize(self.pipe)
             if data_buffer != 0:
                finished = 1
@@ -97,13 +95,14 @@ class ODK_pipe(io.IOBase):
         return dataBuf
 
     def write(self, data):
-        """WriteFileEx impossible due to callback issues."""
-        # there is no need to compare the __name__ of the type!
-        #data = data + "\r\n"
-        if not isinstance(data, bytes):
-            data = bytes(data, 'utf-8')
-        res = os.write(self.pipe, data)
-        return len(data)
+            f = open(self.file_name, 'w')
+            print("Scrivo")
+            write_value = (data)
+            s = str(write_value)
+            f.write(s)
+            print(data)
+            f.close()
+            return len(data)
 
     def close(self):
         try:
@@ -115,13 +114,15 @@ class ODK_pipe(io.IOBase):
 
     def read(self, length=None):
         # Always compare None by identity, not equality
-        if length is None:
-            length = self.inbuffersize
-        resp = os.read(self.pipe,length) 
+        
+        f = open(self.file_name, 'r')
+        read_value = f.read();
+        print(read_value)
+        
         if resp[0] != 0:
             # TODO ?????
             #raise __builtins__.BrokenPipeError(win32api.FormatMessage(resp[0]))
-            print(resp[0])
+            print(read_value[0])
         else:
-            return resp[1]
+            return read_value[1]
            
