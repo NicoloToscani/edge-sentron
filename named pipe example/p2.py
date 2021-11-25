@@ -15,8 +15,9 @@ except OSError as oe:
        raise
     elif(oe.errno == errno.EEXIST):
        print("File already exist")
-       
-f = open(file_name, 'r')
-read_value = f.read();
-print(read_value)
+
+while(True):       
+     f = open(file_name, 'r')
+     read_value = f.read();
+     print(read_value)
          
