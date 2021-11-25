@@ -22,22 +22,25 @@ class ODK_pipe(io.IOBase):
         self.inbuffersize = inbuffersize
         # Create pipe
         self.file_name = "/tmp/HmiRuntime"
-        self.mode = 0o600 # TODO check permisisions for read/write 
+        self.mode = 0o600 # RW permisison
         self.pipe = 0 
        
         
         try:
-             os.mkfifo(self.file_name, self.mode)  
+             # File FIFO (named pipe) creation if doesn't exist
+             os.mkfifo(self.file_name, self.mode)   
         except OSError as oe: 
             if oe.errno != errno.EEXIST:
                raise
+            elif(oe.errno == errno.EEXIST):
+               print("File already exist")
         
     def __del__(self):
         try:
             self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
             os.write(self.pipe, ''.encode())
-        except Exception:
-           traceback.print_exc() 
+        except Exception as e:
+           print(e.args[1]) 
         os.close(self.pipe)
 
     def __exit__(file):
