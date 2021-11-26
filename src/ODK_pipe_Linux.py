@@ -35,7 +35,8 @@ class ODK_pipe(io.IOBase):
         
     def __del__(self):
         try:
-            self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
+            os.chmod(self.file_name, 0o777)
+            self.pipe = os.open(self.file_name, 'w')
             os.write(self.pipe, ''.encode())
         except Exception as e:
            print(e.args[1]) 
@@ -95,6 +96,7 @@ class ODK_pipe(io.IOBase):
         return dataBuf
 
     def write(self, data):
+            os.chmod(self.file_name, 0o777)
             f = open(self.file_name, 'w')
             print("Scrivo")
             write_value = (data)
@@ -114,9 +116,9 @@ class ODK_pipe(io.IOBase):
 
     def read(self, length=None):
         # Always compare None by identity, not equality
-        
+        os.chmod(self.file_name, 0o777)
         f = open(self.file_name, 'r')
-        read_value = f.read();
+        read_value = f.read()
         print(read_value)
         
         if resp[0] != 0:
