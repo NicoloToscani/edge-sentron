@@ -1,5 +1,6 @@
 import io
 import os
+import sys
 import struct
 import traceback
 import errno
@@ -36,7 +37,7 @@ class ODK_pipe(io.IOBase):
     def __del__(self):
         try:
             os.chmod(self.file_name, 0o777)
-            self.pipe = os.open(self.file_name, 'w')
+            self.pipe = os.open(self.file_name)
             os.write(self.pipe, ''.encode())
         except Exception as e:
            print(e.args[1]) 
@@ -96,8 +97,7 @@ class ODK_pipe(io.IOBase):
         return dataBuf
 
     def write(self, data):
-            os.chmod(self.file_name, 0o777)
-            f = open(self.file_name, 'w')
+            f = open(self.file_name)
             print("Scrivo")
             write_value = (data)
             s = str(write_value)
@@ -116,9 +116,8 @@ class ODK_pipe(io.IOBase):
 
     def read(self, length=None):
         # Always compare None by identity, not equality
-        os.chmod(self.file_name, 0o777)
-        f = open(self.file_name, 'r')
-        read_value = f.read()
+        f = open(self.file_name)
+        read_value = f.read();
         print(read_value)
         
         if resp[0] != 0:
