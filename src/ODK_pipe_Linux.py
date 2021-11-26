@@ -21,7 +21,7 @@ class ODK_pipe(io.IOBase):
         self.inbuffersize = inbuffersize
         # Create pipe
         self.file_name = "/tmp/HmiRuntime"
-        self.mode = 0o600 # RW permisison
+        self.mode = 0o777 # RW permisison
         self.pipe = 0 
        
         
@@ -36,7 +36,6 @@ class ODK_pipe(io.IOBase):
         
     def __del__(self):
         try:
-            os.chmod(self.file_name, 0o777)
             self.pipe = os.open(self.file_name)
             os.write(self.pipe, ''.encode())
         except Exception as e:
@@ -97,13 +96,16 @@ class ODK_pipe(io.IOBase):
         return dataBuf
 
     def write(self, data):
-            f = open(self.file_name)
+    
+            print("Call write and wait")
+            self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
             print("Scrivo")
             write_value = (data)
-            s = str(write_value)
-            f.write(s)
+            s = str.encode(write_value)
+            os.write(self.pipe,s)
             print(data)
-            f.close()
+            print(len(s))
+            os.close(self.pipe)
             return len(data)
 
     def close(self):
@@ -116,8 +118,9 @@ class ODK_pipe(io.IOBase):
 
     def read(self, length=None):
         # Always compare None by identity, not equality
-        f = open(self.file_name)
-        read_value = f.read();
+        print("Call read")
+        os.open(self.file_name, os.O_RDWR|os.O_CREAT)
+        read_value = os.read(self.pipe, lenght)
         print(read_value)
         
         if resp[0] != 0:
