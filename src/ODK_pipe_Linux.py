@@ -11,10 +11,8 @@ class ODK_pipe(io.IOBase):
     def __init__(self, name,
                  outbuffersize=1000000,inbuffersize=1000000):
         """ An implementation of a file-like Python object pipe.
-
         Documentation can be found at
         https://msdn.microsoft.com/en-us/library/windows/desktop/aa365150(v=vs.85).aspx
-
         """
         self.name = name
         self.outbuffersize = outbuffersize
@@ -68,7 +66,7 @@ class ODK_pipe(io.IOBase):
     def isDataInPipe(self):
         try:
             # Check if buffer is not empty
-            data_buffer = os.path.getsize(self.pipe)
+            data_buffer = sys.getsizeof(self.pipe)
             if data_buffer != 0:
                finished = 1
         except Exception:
@@ -81,7 +79,7 @@ class ODK_pipe(io.IOBase):
 
         while 1:
             try:
-                bytesToRead = os.path.getsize(self.pipe)
+                bytesToRead = sys.getsizeof(self.pipe)
                 finished = 0
                 if not bytesToRead:
                     break
@@ -120,13 +118,15 @@ class ODK_pipe(io.IOBase):
         # Always compare None by identity, not equality
         print("Call read")
         os.open(self.file_name, os.O_RDWR|os.O_CREAT)
-        read_value = os.read(self.pipe, lenght)
+        if length is None:
+            length = self.inbuffersize
+        length = os.path.getsize(self.pipe)
+        read_value = os.read(self.pipe, length)
         print(read_value)
-        
-        if resp[0] != 0:
+        if read_value[0] != 0:
             # TODO ?????
             #raise __builtins__.BrokenPipeError(win32api.FormatMessage(resp[0]))
-            print(read_value[0])
+            print(read_value)
         else:
             return read_value[1]
-           
+            
