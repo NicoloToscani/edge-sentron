@@ -20,7 +20,7 @@ class ODK_pipe(io.IOBase):
         # Create pipe
         self.file_name = "/tmp/HmiRuntime"
         self.mode = 0o777 # RW permisison
-        self.pipe = 0 
+        self.pipe = 0
        
         
         try:
@@ -30,11 +30,13 @@ class ODK_pipe(io.IOBase):
             if oe.errno != errno.EEXIST:
                raise
             elif(oe.errno == errno.EEXIST):
-               print("File already exist")
+               # Open connection
+               # self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT) 
+               print("Pipe created")
+                           
         
     def __del__(self):
         try:
-            self.pipe = os.open(self.file_name)
             os.write(self.pipe, ''.encode())
         except Exception as e:
            print(e.args[1]) 
@@ -66,9 +68,12 @@ class ODK_pipe(io.IOBase):
     def isDataInPipe(self):
         try:
             # Check if buffer is not empty
+            self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
             data_buffer = sys.getsizeof(self.pipe)
+            print("isDataInPipe dimension: " + str(data_buffer) )
             if data_buffer != 0:
                finished = 1
+            os.close(self.pipe)
         except Exception:
            traceback.print_exc() 
         return data_buffer
@@ -79,6 +84,7 @@ class ODK_pipe(io.IOBase):
 
         while 1:
             try:
+                self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
                 bytesToRead = sys.getsizeof(self.pipe)
                 finished = 0
                 if not bytesToRead:
@@ -86,6 +92,7 @@ class ODK_pipe(io.IOBase):
                 # Read pipe  
                 data = os.read(self.pipe,bytesToRead)  
                 fullDataRead.append(data)
+                os.close(self.pipe)
             except Exception:
                 traceback.print_exc() 
                 break
@@ -95,14 +102,15 @@ class ODK_pipe(io.IOBase):
 
     def write(self, data):
     
-            print("Call write and wait")
+            print("Call write and wait wit data:" + str(data))
             self.pipe = os.open(self.file_name, os.O_RDWR|os.O_CREAT)
             print("Scrivo")
-            write_value = (data)
-            s = str.encode(write_value)
-            os.write(self.pipe,s)
-            print(data)
-            print(len(s))
+            # write_value = (data)
+            if not isinstance(data, bytes):
+               write_value = bytes(data, 'utf-8')
+            os.write(self.pipe,write_value)
+            print(write_value)
+            print(len(write_value))
             os.close(self.pipe)
             return len(data)
 
@@ -120,13 +128,14 @@ class ODK_pipe(io.IOBase):
         os.open(self.file_name, os.O_RDWR|os.O_CREAT)
         if length is None:
             length = self.inbuffersize
-        length = os.path.getsize(self.pipe)
+        length = sys.getsizeof(self.pipe)
         read_value = os.read(self.pipe, length)
         print(read_value)
-        if read_value[0] != 0:
+        if read_value != 0:
             # TODO ?????
             #raise __builtins__.BrokenPipeError(win32api.FormatMessage(resp[0]))
-            print(read_value)
+            print(read_value.decode())
+            print("Valore letto")
         else:
-            return read_value[1]
+            return str(read_value)
             
