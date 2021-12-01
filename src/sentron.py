@@ -8,10 +8,11 @@ import numpy as np
 import sys
 sys.path.insert(0, '..\\') 
 import threading
-from ODK_pipe_Linux import ODK_pipe
-import Runtime
+# from ODK_pipe_Socket_Linux import ODK_pipe
+# import Runtime
 import json
 import sys
+import socket
 
 
 def printOnSuccess(jsonResponse):
@@ -38,6 +39,10 @@ def printOnError(jsonResponse):
 def callbackFunction(response):
     # Callback comes here from Runtime
     # do JSON loading in a try block to avoid invalid JSON processing.
+
+    print(sys.stderr, response)
+
+    '''
     try:
         j = json.loads(response)
         msg = j.get("Message") 
@@ -64,6 +69,7 @@ def callbackFunction(response):
             printOnError(j)
     except json.decoder.JSONDecodeError:
         print("response is not a valid JSON")
+        '''
 
 # Init measures
 def init():
@@ -72,11 +78,12 @@ def init():
     global modbus_port
     global unit_id
     global modbus_enable
+    global pipe_socket
 
-    plc_address = "127.0.0.1"
+    plc_address = "192.168.100.3"
     modbus_port = "502"
     unit_id = 1
-    modbus_enable = "FALSE"
+    modbus_enable = "TRUE"
 
     ConnectionState = 0
     ErrorState = 0
@@ -174,7 +181,8 @@ def setValues(values):
     L3_N = values[2]
 
     # Voltage L-L (V)
-    L1_L2 = values[3]
+    # L1_L2 = values[3]
+    L1_L2 = 330.2
     L2_L3 = values[4]
     L3_L1 = values[5]
 
@@ -246,6 +254,11 @@ def setValues(values):
     writeTagCommand = '{"Message":"WriteTag","Params":{"Tags":[{"Name":"ConnectionState","Value":"' + str(ConnectionState) + '"},{"Name":"ErrorState","Value":"' + str(ErrorState) + '"},{"Name":"L1_N","Value":"' + str(L1_N) + '"},{"Name":"L2_N","Value":"' + str(L2_N) + '"},{"Name":"L3_N","Value":"' + str(L3_N) + '"}, {"Name":"L1_L2","Value":"' + str(L1_L2) + '"},{"Name":"L2_L3","Value":"' + str(L2_L3) + '"},{"Name":"L3_L1","Value":"' + str(L3_L1) + '"},{"Name":"I1","Value":"' + str(I1) + '"},{"Name":"I2","Value":"' + str(I2) + '"},{"Name":"I3","Value":"' + str(I3) + '"},{"Name":"S_L1","Value":"' + str(S_L1) + '"},{"Name":"S_L2","Value":"' + str(S_L2) + '"},{"Name":"S_L3","Value":"' + str(S_L3) + '"},{"Name":"P_L1","Value":"' + str(P_L1) + '"},{"Name":"P_L2","Value":"' + str(P_L2) + '"},{"Name":"P_L3","Value":"' + str(P_L3) + '"},{"Name":"Q_L1","Value":"' + str(Q_L1) + '"},{"Name":"Q_L2","Value":"' + str(Q_L2) + '"},{"Name":"Q_L3","Value":"' + str(Q_L3) + '"},{"Name":"Frequency","Value":"' + str(Frequency) + '"},{"Name":"L_N_Avg","Value":"' + str(L_N_Avg) + '"},{"Name":"L_L_Avg","Value":"' + str(L_L_Avg) + '"},{"Name":"I_Avg","Value":"' + str(I_Avg) + '"},{"Name":"S_Total","Value":"' + str(S_Total) + '"},{"Name":"P_Total","Value":"' + str(P_Total) + '"},{"Name":"Q_Total","Value":"' + str(Q_Total) + '"},{"Name":"PF_Total","Value":"' + str(PF_Total) + '"},{"Name":"I_N","Value":"' + str(I_N) + '"},{"Name":"P_Total_Imp","Value":"' + str(P_Total_Imp) + '"},{"Name":"Q_Total_Imp","Value":"' + str(Q_Total_Imp) + '"},{"Name":"P_Total_Exp","Value":"' + str(P_Total_Exp) + '"},{"Name":"Q_Total_Exp","Value":"' + str(Q_Total_Exp) + '"}]},"ClientCookie":"CookieReadTags123"}\n'
     print(writeTagCommand)
     
+    # Send data to WinCC
+    pipe_socket.sendall(writeTagCommand.encode()) 
+    print("Sended measures")      
+    
+    
 # Init variables
 init()
 
@@ -294,6 +307,23 @@ except  Exception as e:
     connection_state = 0
 '''    
 
+length = 1024
+file_name = '/tmp/HmiRuntime'
+
+# AF_UNIX: process on the same machine
+# SOCK_STREAM: stream oriented socket
+pipe_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+pipe_socket.setblocking(0)
+
+print(sys.stderr, 'Connecting to %s' % file_name)
+
+# Socket connection 
+try:
+    pipe_socket.connect(file_name)
+    print(sys.stderr, 'Connect to %s' % file_name)
+except socket.error as msg:
+    print(sys.stderr, msg)
+
 
 #Read register - Set interval from HMI
 while True:
@@ -310,12 +340,24 @@ while True:
       elif(connection_state == 0):
            print("Connection state: OFFLINE")
       
-      # Pipe creation  
-      runtime = Runtime.Runtime(callbackFunction)
+      
+      # Check if there are data on socket
+      try:
+          print("Receive data")
+          read_value = pipe_socket.recv(length)
+          print("Received data")
+          reads = read_value.decode()
+          callbackFunction(reads)
+      except BlockingIOError:
+          print('no data')
+      
+      
+      
    
       # Read tag from WinCC
       readTagCommand = '{"Message":"ReadTag","Params":{"Tags":["Enable","Ip_Address","Port_Number","Unit_Id"]},"ClientCookie":"myRequest1"}\n'
-      runtime.SendExpertCommand(readTagCommand)
+      pipe_socket.sendall(readTagCommand.encode())
+      
 
       print(modbus_enable)
       print(plc_address)
@@ -384,8 +426,6 @@ while True:
                # Write on WinCC 
                setValues(values)
             
-               # Send data to WinCC
-               runtime.SendExpertCommand(writeTagCommand)     
       
                # End time
                endtime = time.time()
@@ -403,7 +443,8 @@ while True:
                  setValues(values)
         
                  # Send data to WinCC
-                 runtime.SendExpertCommand(writeTagCommand)
+                 # runtime.SendExpertCommand(writeTagCommand)
+                 pipe_socket.sendall(writeTagCommand.encode())  
 
                  # End time
                  endtime = time.time()
@@ -437,7 +478,6 @@ while True:
              print("Execution time: %s seconds " % (endtime - startime))
              print("Error code: ", error_code, " description: ", error_code_desc)
              time.sleep(polling_time)
-
 
 
 

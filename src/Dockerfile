@@ -13,8 +13,8 @@ RUN pip3 install  paho-mqtt   && \
 
 COPY sentron.py .
 COPY Tags.py .
-COPY Runtime.py .
-COPY ODK_pipe_Linux.py .
+# COPY Runtime.py .
+# COPY ODK_pipe_Socket_Linux.py .
 
 CMD [ "python", "./sentron.py" ]
 
