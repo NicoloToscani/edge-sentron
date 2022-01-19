@@ -41,79 +41,6 @@ def callbackFunction(response):
     # do JSON loading in a try block to avoid invalid JSON processing.
 
     print(sys.stderr, response)
-    
-    check_in = response[0: 15]
-    print("check_in: " + check_in)
-    
-    if check_in == ('{"ClientCookie"') :
-         
-         substring_a = response.split("{", 7)
-    
-         print('--- Substring a ---')
-         print(substring_a)
-         
-         print("Substring size: " + str(len(substring_a)))
-         print('sub 0' + substring_a[0])
-         print('sub 1' + substring_a[1])
-         print('sub 2' + substring_a[2])
-         print('sub 3' + substring_a[3])
-         print('sub 4' + substring_a[4])
-         print('sub 5' + substring_a[5])
-         print('sub 6' + substring_a[6])
-        
-         
-         substring_3 = substring_a[3].split(",", 6)
-         substring_c = substring_3[6]
-         substring_d = substring_c[0:10]
-         print(substring_d)
-         unit_id_str = substring_d[9:10]
-         
-         substring_4 = substring_a[4].split(",", 6)
-         substring_e = substring_4[6]
-         substring_f = substring_e[0:12]
-         print(substring_f)
-         port_number_str = substring_f[9:12]
-         
-         substring_5 = substring_a[5].split(",", 6)
-         substring_g = substring_5[6]
-         substring_h = substring_g[0:22]
-         print(substring_h)
-         plc_address_str = substring_h[9:22]
-         
-         substring_6 = substring_a[6].split(",", 6)
-         substring_i = substring_6[6]
-         substring_l = substring_i[0:10]
-         print(substring_l)
-         modbus_enable_str = substring_l[9:10]
-         
-         
-         
-         
-         
-         # Set gloagal variable
-         global unit_id
-         unit_id = int(unit_id_str) 
-         
-         global modbus_port
-         modbus_port = int(port_number_str)
-         
-         global plc_address
-         plc_address = str(plc_address_str)
-         
-         print(unit_id)
-         print(modbus_port)
-         
-         global modbus_enable
-         
-         if modbus_enable_str == '0':
-            modbus_enable = "FALSE"
-         elif modbus_enable_str == '1':
-            modbus_enable = "TRUE"
-         
-         
-         
-         
-    
 
     '''
     try:
@@ -254,8 +181,7 @@ def setValues(values):
     L3_N = values[2]
 
     # Voltage L-L (V)
-    # L1_L2 = values[3]
-    L1_L2 = 330.2
+    L1_L2 = values[3]
     L2_L3 = values[4]
     L3_L1 = values[5]
 
@@ -381,7 +307,7 @@ except  Exception as e:
 '''    
 
 length = 1024
-file_name = '/tmp/HmiRuntime'
+file_name = '/temp/HmiRuntime'
 
 # AF_UNIX: process on the same machine
 # SOCK_STREAM: stream oriented socket
@@ -414,7 +340,6 @@ while True:
            print("Connection state: OFFLINE")
       
       
-      
       # Check if there are data on socket
       try:
           print("Receive data")
@@ -424,13 +349,15 @@ while True:
           callbackFunction(reads)
       except BlockingIOError:
           print('no data')
-          
-          
+      
+      
+      
+   
       # Read tag from WinCC
       readTagCommand = '{"Message":"ReadTag","Params":{"Tags":["Enable","Ip_Address","Port_Number","Unit_Id"]},"ClientCookie":"myRequest1"}\n'
       pipe_socket.sendall(readTagCommand.encode())
       
-      
+
       print(modbus_enable)
       print(plc_address)
       print(modbus_port)
@@ -550,7 +477,6 @@ while True:
              print("Execution time: %s seconds " % (endtime - startime))
              print("Error code: ", error_code, " description: ", error_code_desc)
              time.sleep(polling_time)
-
 
 
 
