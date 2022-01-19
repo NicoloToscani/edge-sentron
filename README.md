@@ -105,7 +105,7 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable tabl
 |  Port_Number                       | WString               | Multimeter Modbus port             |
 |  Unit_Id                           | Int                   | Multimeter Modbus unit ID          |
 |  Enable                            | Bool                  | Enable application                 |
-|  Connection_State                  | Int                   | **0**: disconnected; **1**: connecting; **2**: connected |
+|  Connection_State                  | Int                   | **0**: disconnected; **1**: connecting; **2**: connected; |
 
 ## How to use
 In order for the application to work, the following steps must be followed:
