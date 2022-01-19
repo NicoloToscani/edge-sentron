@@ -114,7 +114,7 @@ In order for the application to work, the following steps must be followed:
 - Enable application with *Enable* switch
 - Connect variables for energy measures visualization
 
-You can start using it without configuration using the default parameters:
+You can start using it without configuration with default parameters:
 - IPv4: 192.168.100.9
 - Modbus port: 502
 - Unit ID: 1
