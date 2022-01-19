@@ -80,7 +80,7 @@ def init():
     global modbus_enable
     global pipe_socket
 
-    plc_address = "192.168.100.3"
+    plc_address = "192.168.100.9"
     modbus_port = "502"
     unit_id = 1
     modbus_enable = "TRUE"
