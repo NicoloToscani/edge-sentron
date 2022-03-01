@@ -353,7 +353,7 @@ except socket.error as msg:
 
 
 # Read tag from WinCC
-readTagCommand = '{"Message":"ReadTag","Params":{"Tags":["Enable","Ip_Address","Port_Number","Unit_Id"]},"ClientCookie":"myRequest1"}\n'
+readTagCommand = '{"Message":"ReadTag","Params":{"Tags":["Device_Type","Enable","Ip_Address","Port_Number","Unit_Id"]},"ClientCookie":"myRequest1"}\n'
 pipe_socket.sendall(readTagCommand.encode())
 
 
