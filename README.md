@@ -2,7 +2,7 @@
 
 Edge application for SIMATIC WinCC Unified to read energy consumption from Siemens SENTRON series over Modbus TCP/IP.
 
-![sentron-example](docs/sentron_edge_example.png)
+![sentron-example](docs/sentron_edge.png)
 
 ## Energy data
 
