@@ -82,7 +82,8 @@ Use the **"Open Global Libraries"** button and import the ```EdgeSentronLibrary.
 
 Import the **"EdgeSentronTags"** Tags table within the HMI Tags of your TIA Portal V17 project.
 
-Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable table:
+Below are the details of the HMI Tags of the **"EdgeSentronTags"** variables tables.
+## EdgeSentronLibrary - PAC2200
 | HMI Tag Name                       | Type                  | Description                        | 
 | ---------------------------------- | --------------------- | ---------------------------------- | 
 |  L1_N                              | Real                  | Voltage L1-N [V]                   |
