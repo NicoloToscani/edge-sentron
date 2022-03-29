@@ -107,28 +107,28 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable tabl
 |  PF_L2                             | Real                  | Power factor L2 []                 |
 |  PF_L3                             | Real                  | Power factor L3 []                 |
 |  Frequency                         | Real                  | Frequency [Hz]                     |
-
-
-
-
-
-
-
-|  I_Avg                             | Real                  | Current Avg (A)                    |
-|  LL_Avg                            | Real                  | Voltage L-L Avg (V)                |
-|  LN_Avg                            | Real                  | Voltage L-N Avg (V)                |
-|  Active_Power_Ph1                  | Real                  | Active power phase 1 (Kw)          |
-|  Active_Power_Ph2                  | Real                  | Active power phase 2 (Kw)          |
-|  Active_Power_Ph3                  | Real                  | Active power phase 3 (Kw)          |
-|  Active_Power_Tot                  | Real                  | Total active power (Kw)            |
-|  Power_Factor                      | Real                  | Power factor total                 |
-|  Frequency                         | Real                  | Frequency (Hz)                     |
-|  Total_Active_Energy_Imported      | LReal                 | Total active energy imported (KwH) |
-|  Ip_Address                        | WString               | Multimeter IPv4 address            |
-|  Port_Number                       | WString               | Multimeter Modbus port             |
-|  Unit_Id                           | Int                   | Multimeter Modbus unit ID          |
-|  Enable                            | Bool                  | Enable application                 |
-|  Connection_State                  | Int                   | **0**: disconnected; **1**: connecting; **2**: connected; |
+|  LN_Avg                            | Real                  | Average voltage L-N [V]            |
+|  LL_Avg                            | Real                  | Average voltage L-L [V]            |
+|  I_Avg                             | Real                  | Average current [A]                |
+|  S_Total                           | Real                  | Total apparent power [VA]          |
+|  P_Total                           | Real                  | Total active power [W]             |
+|  Q_Total                           | Real                  | Total reactive power [var]         |
+|  PF_Tot                            | Real                  | Total power factor []              |
+|  I_N                               | Real                  | Neutral current [A]                |
+|  P_Total_Imp                       | Real                  | Active energy import [Wh]          |
+|  Q_Total_Imp                       | Real                  | Reactive energy import [varh]      |
+|  P_Total_Exp                       | Real                  | Active energy export [Wh]          |
+|  Q_Total_Exp                       | Real                  | Reactive energy export [varh]      |
+|  IPv4                              | WString               | IPv4 address                       |
+|  Port_Number                       | Int                   | Modbus TCP/IP port number          |
+|  Unit_Id                           | Int                   | Modbus TCP/IP unit ID              |
+|  Device_Type                       | Int                   | Sentron device type                |
+|  Enable                            | Bool                  | Modbus TCP/IP request enable       |
+|  Connection_State                  | Int                   | **0**: OFFLINE; **1**: ONLINE;     |
+|  Error                             | Int                   | **0**: ACK; **1**: NACK;           |
+|  Error_Code                        | Int                   | Modbus TCP/IP error code           |
+|  Error_Code_Desc                   | WString               | Modbus TCP/IP error code description |
+| Polling_Timestamp                  | WString               | Last received data                 |
 
 ## How to use
 In order for the application to work, the following steps must be followed:
