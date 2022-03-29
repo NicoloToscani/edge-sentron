@@ -85,16 +85,17 @@ Import the **"EdgeSentronTags"** Tags table within the HMI Tags of your TIA Port
 Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable table:
 | HMI Tag Name                       | Type                  | Description                        | 
 | ---------------------------------- | --------------------- | ---------------------------------- | 
+|  L1_N                              | Real                  | Voltage L1-N [V]                   |
+|  L2_N                              | Real                  | Voltage L2-N (V)                   |
+|  L3_N                              | Real                  | Voltage L3-N (V)                   |
+|  L1_L2                             | Real                  | Voltage L1-L2 (V)                  |
+|  L2_L3                             | Real                  | Voltage L2-L3 (V)                  |
+|  L3_L1                             | Real                  | Voltage L3-L1 (V)                  |
 |  I1                                | Real                  | Phase current 1 (A)                |
 |  I2                                | Real                  | Phase current 2 (A)                |
 |  I3                                | Real                  | Phase current 3 (A)                |
 |  I_Avg                             | Real                  | Current Avg (A)                    |
-|  L1_L2                             | Real                  | Voltage L1-L2 (V)                  |
-|  L2_L3                             | Real                  | Voltage L2-L3 (V)                  |
-|  L3_L1                             | Real                  | Voltage L3-L1 (V)                  |
 |  LL_Avg                            | Real                  | Voltage L-L Avg (V)                |
-|  L1_N                              | Real                  | Voltage L1-N (V)                   |
-|  L2_N                              | Real                  | Voltage L2-N (V)                   |
 |  LN_Avg                            | Real                  | Voltage L-N Avg (V)                |
 |  Active_Power_Ph1                  | Real                  | Active power phase 1 (Kw)          |
 |  Active_Power_Ph2                  | Real                  | Active power phase 2 (Kw)          |
