@@ -132,7 +132,20 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variables tab
 | Polling_Timestamp                  | WString               | Last received data                 |
 
 ### Device type 
-It's possible select the model of the installed device with *Device_Type* parameter:
+It's possible select the model of the installed device with *Device_Type* parameter:+
+- 0: PAC1200
+- 1: PAC1600
+- 2: PAC2200
+- 3: PAC3100
+- 4: PAC3120
+- 5: PAC3220
+- 6: PAC3200T
+- 7: PAC4200
+- 8: PAC5200
+- 9: SEM3
+- 10: ATC6300
+- 11: 3VA
+- 20: Powercenter 1000
 
 
 ## How to use
