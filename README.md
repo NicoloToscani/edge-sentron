@@ -131,6 +131,10 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variables tab
 |  Error_Code_Desc                   | WString               | Modbus TCP/IP error code description |
 | Polling_Timestamp                  | WString               | Last received data                 |
 
+### Device type 
+It's possible select the model of the installed device with *Device_Type* parameter:
+
+
 ## How to use
 In order for the application to work, the following steps must be followed:
 - Start **edge-sentron** from *Edge Management* 
