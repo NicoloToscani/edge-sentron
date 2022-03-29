@@ -47,11 +47,11 @@ List of **PAC2200** meter data:
 
 ## Install the App
 
-*sentron-edge* comes with pre-builded ```sentron-edge_x.x.x.app``` package that can be installed specifically on Unified Comfort Panels that runs SIMATIC Edge Runtime.
+*edge-sentron* comes with pre-builded ```edge-sentron_x.x.x.app``` package that can be installed specifically on Unified Comfort Panels that runs SIMATIC Edge Runtime.
 
 ### Download the App
 
-The **sentron-edge** app can be downloaded in .app format from this repository [sentron-edge_x.x.x.app](https://drive.google.com/drive/folders/1coGurU8VEtxEa04gEA1YxiTsP1GL1LKD)
+The **edge-sentron** app can be downloaded in .app format from this repository [sentron-edge_x.x.x.app](https://drive.google.com/drive/folders/1coGurU8VEtxEa04gEA1YxiTsP1GL1LKD)
 
 ### Prerequisites
 
@@ -60,7 +60,7 @@ The **sentron-edge** app can be downloaded in .app format from this repository [
 
 ### Load App on Unified Comfort Panels
 
-1. Copy the downloaded ```sentron-edge_x.x.x.app``` file to your Developer PC.
+1. Copy the downloaded ```edge-sentron_x.x.x.app``` file to your Developer PC.
 2. Open the Industrial Edge Management Web Page of UCP on ```https://<ucp-address>```
 3. Import the .app file using the *Import Offline* button
 4. Wait until App is installed
@@ -71,7 +71,7 @@ In order for the application to work, it is necessary to insert some elements in
 
 - **"EdgeSentronTags"** Table Variables;
 
-These elements are included in a TIA Portal V17 library **"EdgeSentronLibrary"** provided along with the powerlogic-edge application and an application example.
+These elements are included in a TIA Portal V17 library **"EdgeSentronLibrary"** provided along with the edge-sentron application and an application example.
 
 ### "EdgeSentronLibrary" Library Import
 
@@ -111,7 +111,7 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable tabl
 
 ## How to use
 In order for the application to work, the following steps must be followed:
-- Start **sentron-edge** from *Edge Management* 
+- Start **edge-sentron** from *Edge Management* 
 - Set *Sentron* communication parameters
 - Enable application with *Enable* switch
 - Connect variables for energy measures visualization
