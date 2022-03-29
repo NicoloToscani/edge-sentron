@@ -134,6 +134,7 @@ You can start using it without configuration with default parameters:
   - Test PAC200
 - 0.0.3
   - PAC2200 full support
+  - runtime configuration settings
 
 ## License
 
