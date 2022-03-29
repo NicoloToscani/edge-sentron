@@ -86,14 +86,34 @@ Below are the details of the HMI Tags of the **"EdgeSentronTags"** variable tabl
 | HMI Tag Name                       | Type                  | Description                        | 
 | ---------------------------------- | --------------------- | ---------------------------------- | 
 |  L1_N                              | Real                  | Voltage L1-N [V]                   |
-|  L2_N                              | Real                  | Voltage L2-N (V)                   |
-|  L3_N                              | Real                  | Voltage L3-N (V)                   |
-|  L1_L2                             | Real                  | Voltage L1-L2 (V)                  |
-|  L2_L3                             | Real                  | Voltage L2-L3 (V)                  |
-|  L3_L1                             | Real                  | Voltage L3-L1 (V)                  |
-|  I1                                | Real                  | Phase current 1 (A)                |
-|  I2                                | Real                  | Phase current 2 (A)                |
-|  I3                                | Real                  | Phase current 3 (A)                |
+|  L2_N                              | Real                  | Voltage L2-N [V]                   |
+|  L3_N                              | Real                  | Voltage L3-N [V]                   |
+|  L1_L2                             | Real                  | Voltage L1-L2 [V]                  |
+|  L2_L3                             | Real                  | Voltage L2-L3 [V]                  |
+|  L3_L1                             | Real                  | Voltage L3-L1 [V]                  |
+|  I1                                | Real                  | Phase current 1 [A]                |
+|  I2                                | Real                  | Phase current 2 [A]                |
+|  I3                                | Real                  | Phase current 3 [A]                |
+|  S_L1                              | Real                  | Apparent power L1 [VA]             |
+|  S_L2                              | Real                  | Apparent power L2 [VA]             |
+|  S_L3                              | Real                  | Apparent power L3 [VA]             |
+|  P_L1                              | Real                  | Active power L1 [W]                |
+|  P_L2                              | Real                  | Active power L2 [W]                |
+|  P_L3                              | Real                  | Active power L3 [W]                |
+|  Q_L1                              | Real                  | Reactive power L1 [var]            |
+|  Q_L2                              | Real                  | Reactive power L2 [var]            |
+|  Q_L3                              | Real                  | Reactive power L3 [var]            |
+|  PF_L1                             | Real                  | Power factor L1 []                 |
+|  PF_L2                             | Real                  | Power factor L2 []                 |
+|  PF_L3                             | Real                  | Power factor L3 []                 |
+|  Frequency                         | Real                  | Frequency [Hz]                     |
+
+
+
+
+
+
+
 |  I_Avg                             | Real                  | Current Avg (A)                    |
 |  LL_Avg                            | Real                  | Voltage L-L Avg (V)                |
 |  LN_Avg                            | Real                  | Voltage L-N Avg (V)                |
