@@ -51,7 +51,7 @@ List of **PAC2200** meter data:
 
 ### Download the App
 
-The **edge-sentron** app can be downloaded in .app format from this repository [sentron-edge_x.x.x.app](https://drive.google.com/drive/folders/1coGurU8VEtxEa04gEA1YxiTsP1GL1LKD)
+The **edge-sentron** app can be downloaded in .app format from this repository [edge-sentron_x.x.x.app](https://drive.google.com/drive/folders/1coGurU8VEtxEa04gEA1YxiTsP1GL1LKD)
 
 ### Prerequisites
 
@@ -130,6 +130,10 @@ You can start using it without configuration with default parameters:
 
 - 0.0.1
   - The first release.
+- 0.0.2
+  - Test PAC200
+- 0.0.3
+  - PAC2200 full support
 
 ## License
 
